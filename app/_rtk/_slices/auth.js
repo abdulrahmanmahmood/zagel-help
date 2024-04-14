@@ -1,36 +1,25 @@
 "use client";
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  token: null,
+  email: null,
+  displayName: null,
+  role: null,
+};
+
 const authSlice = createSlice({
   name: "auth",
-  initialState: () => {
-    const storedAuthData =
-      typeof window !== "undefined"
-        ? JSON.parse(localStorage.getItem("authData"))
-        : null;
-
-    return storedAuthData
-      ? storedAuthData
-      : {
-          token: null,
-          email: null,
-          displayName: null,
-          role: null,
-        };
-  },
+  initialState,
   reducers: {
     setAuthData: (state, action) => {
       const { token, email, displayName, role } = action.payload;
-      if (token && email) {
-        state.token = token;
-        state.email = email;
-        state.displayName = displayName;
-        state.role = role;
-        if (typeof window !== "undefined") {
-          localStorage.setItem("authData", JSON.stringify(action.payload));
-        }
-      } else {
-        console.error("Invalid authentication data");
+      state.token = token;
+      state.email = email;
+      state.displayName = displayName;
+      state.role = role;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("authData", JSON.stringify(action.payload));
       }
     },
     clearAuthData: (state) => {
