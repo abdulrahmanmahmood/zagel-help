@@ -12,35 +12,37 @@ import { useSelector } from "react-redux"; // Import useSelector hook to access 
 import axios from "axios"; // Import Axios for HTTP requests
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'; // Re-uses images from ~leaflet package
-
-
+import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css"; // Re-uses images from ~leaflet package
 
 const page = () => {
   const position = [19.999208860791935, 42.60094642639161]; // Default position
   const [persons, setPersons] = useState([]); // State variable to hold persons data
 
   const fetchPersons = async () => {
-    try {
-      const response = await axios.get(
-        "http://jazlhelp.runasp.net/api/content"
-      );
-      setPersons(response.data);
-      console.log("sucess fetching the data", response.data);
-    } catch (error) {
-      console.error("Error fetching persons data:", error);
-      // Handle errors here
+    if (typeof window !== "undefined") {
+      try {
+        const response = await axios.get(
+          "http://jazlhelp.runasp.net/api/content"
+        );
+        setPersons(response.data);
+        console.log("success fetching the data", response.data);
+      } catch (error) {
+        console.error("Error fetching persons data:", error);
+        // Handle errors here
+      }
     }
   };
   const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://jazlhelp.runasp.net/api/content/${id}`);
-      console.log("Person deleted successfully!");
-      // Update state or refetch data if necessary
-      fetchPersons();
-    } catch (error) {
-      console.error("Error deleting person:", error);
-      // Handle errors here
+    if (typeof window !== "undefined") {
+      try {
+        await axios.delete(`http://jazlhelp.runasp.net/api/content/${id}`);
+        console.log("Person deleted successfully!");
+        // Update state or refetch data if necessary
+        fetchPersons();
+      } catch (error) {
+        console.error("Error deleting person:", error);
+        // Handle errors here
+      }
     }
   };
 
@@ -52,35 +54,39 @@ const page = () => {
     };
   }, []);
 
-  const markers = [
-    {
-      position: [19.984701088274022, 42.64470151140049], // besha1
-      popup: "Riyadh",
-      data: "لم يتم المعالجة",
-      name: "الحج محمد شيبوب",
-      contactNumbers: "011223423432",
-      executingEntity: "جمعية رجال من اجل النساء",
-      requestType: "مقبولة",
-    },
-    {
-      position: [20.006824179975645, 42.60595448715381], // Jeddah
-      popup: "Jeddah",
-      data: "تم المعالجة",
-      name: "الحج عبدالله شيبوب",
-      contactNumbers: "011223423432",
-      executingEntity: "جمعية عايشين بكرم الله ",
-      requestType: "جيدة",
-    },
-    {
-      position: [19.99674858831157, 42.60153434796344], // Dammam
-      popup: "Dammam",
-      data: "جاري المعالجة",
-      name: "الحج علي شيبوب",
-      contactNumbers: "011223423432",
-      executingEntity: "جمعية كلنا اخوة",
-      requestType: "جامد طحن",
-    },
-  ];
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Define your markers data here
+      const markersData = [
+        {
+          position: [19.984701088274022, 42.64470151140049],
+          name: "الحج محمد شيبوب",
+          executingEntity: "جمعية رجال من اجل النساء",
+          requestType: "مقبولة",
+          contactNumbers: "011223423432",
+          id: 1,
+        },
+        {
+          position: [20.006824179975645, 42.60595448715381],
+          name: "الحج عبدالله شيبوب",
+          executingEntity: "جمعية عايشين بكرم الله",
+          requestType: "جيدة",
+          contactNumbers: "011223423432",
+          id: 2,
+        },
+        {
+          position: [19.99674858831157, 42.60153434796344],
+          name: "الحج علي شيبوب",
+          executingEntity: "جمعية كلنا اخوة",
+          requestType: "جامد طحن",
+          contactNumbers: "011223423432",
+          id: 3,
+        },
+      ];
+
+      setMarkers(markersData);
+    }
+  }, []);
 
   const getMarkerIcon = (data) => {
     if (data === "لم يتم المعالجة") {
@@ -125,7 +131,6 @@ const page = () => {
     console.log("persons", persons);
   }, [persons]);
 
-
   return (
     <div className="w-full bg-[#ceb99c] h-[100vh] p-0 m-0 ">
       <Navheader />
@@ -151,8 +156,6 @@ const page = () => {
                 position={[person.latitude, person.longitude]}
                 icon={getMarkerIcon(person.color)}
                 // img={getMarkerIcon(person.coor)}
-                
-                
               >
                 <Popup>
                   <table className="table-auto border-[1.5px] border-black text-right w-[200px] h-[150px]">

@@ -19,7 +19,7 @@ const page = () => {
   const { role, token, email, displayName } = useSelector(
     (state) => state.auth
   );
-  console.log("toke from setAddress",token);
+  console.log("toke from setAddress", token);
 
   // State variables for form data and selected position
   const [formData, setFormData] = useState({
@@ -42,39 +42,41 @@ const page = () => {
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const dataToSend = {
-        name: formData.name,
-        contactNumbers: formData.contactNumbers,
-        requestType: formData.requestType,
-        longitude: selectedPosition.lng,
-        latitude: selectedPosition.lat,
-        executingEntity: formData.executingEntity,
-      };
-      console.log("Sending data:", dataToSend);
+    if (typeof window !== "undefined") {
+      e.preventDefault();
+      try {
+        const dataToSend = {
+          name: formData.name,
+          contactNumbers: formData.contactNumbers,
+          requestType: formData.requestType,
+          longitude: selectedPosition.lng,
+          latitude: selectedPosition.lat,
+          executingEntity: formData.executingEntity,
+        };
+        console.log("Sending data:", dataToSend);
 
-      // Send the form data to the endpoint using Axios
-      const response = await axios.post(
-        "http://jazlhelp.runasp.net/api/Content",
-        dataToSend,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add the Authorization header with the token
-          },
-        }
-      );
+        // Send the form data to the endpoint using Axios
+        const response = await axios.post(
+          "http://jazlhelp.runasp.net/api/Content",
+          dataToSend,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`, // Add the Authorization header with the token
+            },
+          }
+        );
 
-      console.log("Data sent successfully:", response.data);
-      // Reset form data and selected position after successful submission
-      setFormData({ name: "", contactNumbers: "", requestType: "" });
+        console.log("Data sent successfully:", response.data);
+        // Reset form data and selected position after successful submission
+        setFormData({ name: "", contactNumbers: "", requestType: "" });
 
-      setSelectedPosition(null);
-      alert("تم إضافة الحالة بنجاح 👍");
-    } catch (error) {
-      console.error("Error sending data:", error);
-      // Handle errors here
-      alert("خطأ في ", error.message ? error.message : error);
+        setSelectedPosition(null);
+        alert("تم إضافة الحالة بنجاح 👍");
+      } catch (error) {
+        console.error("Error sending data:", error);
+        // Handle errors here
+        alert("خطأ في ", error.message ? error.message : error);
+      }
     }
   };
 
@@ -132,11 +134,13 @@ const page = () => {
           {selectedPosition ? (
             <form
               onSubmit={handleSubmit}
-              style={{
-                // backgroundImage: `url(${backgroundImage})`,
-                // backgroundSize: "cover",
-                // backgroundPosition: "center",
-              }}
+              style={
+                {
+                  // backgroundImage: `url(${backgroundImage})`,
+                  // backgroundSize: "cover",
+                  // backgroundPosition: "center",
+                }
+              }
             >
               <div className="mb-4">
                 <label

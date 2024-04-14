@@ -3,10 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const authSlice = createSlice({
   name: "auth",
   initialState: () => {
-    let storedAuthData = null;
-    if (typeof window !== "undefined") {
-      storedAuthData = JSON.parse(localStorage.getItem("authData"));
-    }
+    const storedAuthData =
+      typeof window !== "undefined"
+        ? JSON.parse(localStorage.getItem("authData"))
+        : null;
 
     return storedAuthData
       ? storedAuthData
