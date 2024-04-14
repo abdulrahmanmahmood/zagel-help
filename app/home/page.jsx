@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useEffect, useState } from "react";
 import Navheader from "../_components/Navheader";
 import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";

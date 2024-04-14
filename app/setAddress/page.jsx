@@ -1,10 +1,32 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+
 import Navheader from "../_components/Navheader";
-import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import { useMapEvents } from "react-leaflet";
+const MapContainerWithNoSSR = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+
+const MarkerWithNoSSR = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+const TileLayerWithNoSSR = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+
 import "leaflet/dist/leaflet.css";
-import { Icon } from "leaflet";
-import { Popup } from "react-leaflet";
+const IconWithNoSSR = dynamic(() => import("leaflet").then((mod) => mod.Icon), {
+  ssr: false,
+});
+const PopupWithNoSSR = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Popup),
+  { ssr: false }
+);
+
 import redIcon from "../../public/location.png";
 import greenIcon from "../../public/gps.png";
 import OrangeIcon from "../../public/placeholder.png";
@@ -12,6 +34,15 @@ import { useSelector } from "react-redux"; // Import useSelector hook to access 
 import axios from "axios"; // Import Axios for HTTP requests
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
+
+const LocationFinder = ({ setSelectedPosition }) => {
+  const map = useMapEvents({
+    click(e) {
+      setSelectedPosition(e.latlng); // Update selected position
+    },
+  });
+  return null;
+};
 
 const page = () => {
   const position = [19.999208860791935, 42.60094642639161]; // Default position
@@ -29,16 +60,6 @@ const page = () => {
     executingEntity: "",
   });
   const [selectedPosition, setSelectedPosition] = useState(null);
-
-  // Event listener to capture click events on the map
-  const LocationFinder = () => {
-    const map = useMapEvents({
-      click(e) {
-        setSelectedPosition(e.latlng); // Update selected position
-      },
-    });
-    return null;
-  };
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
@@ -106,29 +127,29 @@ const page = () => {
       <h1 className="text-2xl font-bold text-center mt-4">إضافة حالة جديدة</h1>
 
       <div className="w-[97%] justify-between gap-3 flex flex-col  lg:flex-row  mx-auto mt-4">
-        <MapContainer
+        <MapContainerWithNoSSR
           center={position}
           zoom={14}
           style={{ height: "70vh", width: "100%" }}
         >
-          <TileLayer
+          <TileLayerWithNoSSR
             attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <TileLayer
+          <TileLayerWithNoSSR
             attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           />
-          <LocationFinder />
+          <LocationFinder setSelectedPosition={setSelectedPosition} />
           {selectedPosition && (
-            <Marker
+            <MarkerWithNoSSR
               position={selectedPosition}
               // icon={getMarkerIcon("تم المعالجة")} // Change marker icon based on data
             >
-              <Popup>Selected Position</Popup>
-            </Marker>
+              <PopupWithNoSSR>Selected Position</PopupWithNoSSR>
+            </MarkerWithNoSSR>
           )}
-        </MapContainer>
+        </MapContainerWithNoSSR>
 
         <div className="w-full lg:max-w-md mx-auto  p-4 border bg-[#9d9273]  border-gray-300 rounded-md">
           {selectedPosition ? (
