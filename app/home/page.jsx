@@ -17,6 +17,8 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 const page = () => {
   const position = [19.999208860791935, 42.60094642639161]; // Default position
   const [persons, setPersons] = useState([]); // State variable to hold persons data
+  const [markers, setMarkers] = useState([]); // Define markers state
+
 
   const fetchPersons = async () => {
     if (typeof window !== "undefined") {
