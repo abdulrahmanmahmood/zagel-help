@@ -1,9 +1,8 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import StoreProvider from "./_rtk/StoreProvider";
 
 const inter = Inter({ subsets: ["latin"] });
-import StoreProvider from  './_rtk/StoreProvider'
-
 
 export const metadata = {
   title: "Create Next App",

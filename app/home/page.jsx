@@ -14,11 +14,39 @@ import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css"; // Re-uses images from ~leaflet package
 
+const markers = [
+  {
+    position: [19.984701088274022, 42.64470151140049], // besha1
+    popup: "Riyadh",
+    data: "لم يتم المعالجة",
+    name: "الحج محمد شيبوب",
+    contactNumbers: "011223423432",
+    executingEntity: "جمعية رجال من اجل النساء",
+    requestType: "مقبولة",
+  },
+  {
+    position: [20.006824179975645, 42.60595448715381], // Jeddah
+    popup: "Jeddah",
+    data: "تم المعالجة",
+    name: "الحج عبدالله شيبوب",
+    contactNumbers: "011223423432",
+    executingEntity: "جمعية عايشين بكرم الله ",
+    requestType: "جيدة",
+  },
+  {
+    position: [19.99674858831157, 42.60153434796344], // Dammam
+    popup: "Dammam",
+    data: "جاري المعالجة",
+    name: "الحج علي شيبوب",
+    contactNumbers: "011223423432",
+    executingEntity: "جمعية كلنا اخوة",
+    requestType: "جامد طحن",
+  },
+];
+
 const page = () => {
   const position = [19.999208860791935, 42.60094642639161]; // Default position
   const [persons, setPersons] = useState([]); // State variable to hold persons data
-  const [markers, setMarkers] = useState([]); // Define markers state
-
 
   const fetchPersons = async () => {
     if (typeof window !== "undefined") {
@@ -54,40 +82,6 @@ const page = () => {
       // Cleanup function to remove markers when component unmounts
       setPersons([]); // Clear persons state
     };
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Define your markers data here
-      const markersData = [
-        {
-          position: [19.984701088274022, 42.64470151140049],
-          name: "الحج محمد شيبوب",
-          executingEntity: "جمعية رجال من اجل النساء",
-          requestType: "مقبولة",
-          contactNumbers: "011223423432",
-          id: 1,
-        },
-        {
-          position: [20.006824179975645, 42.60595448715381],
-          name: "الحج عبدالله شيبوب",
-          executingEntity: "جمعية عايشين بكرم الله",
-          requestType: "جيدة",
-          contactNumbers: "011223423432",
-          id: 2,
-        },
-        {
-          position: [19.99674858831157, 42.60153434796344],
-          name: "الحج علي شيبوب",
-          executingEntity: "جمعية كلنا اخوة",
-          requestType: "جامد طحن",
-          contactNumbers: "011223423432",
-          id: 3,
-        },
-      ];
-
-      setMarkers(markersData);
-    }
   }, []);
 
   const getMarkerIcon = (data) => {
@@ -156,7 +150,7 @@ const page = () => {
               <Marker
                 key={index}
                 position={[person.latitude, person.longitude]}
-                icon={getMarkerIcon(person.color)}
+                // icon={getMarkerIcon(person.color)}
                 // img={getMarkerIcon(person.coor)}
               >
                 <Popup>
