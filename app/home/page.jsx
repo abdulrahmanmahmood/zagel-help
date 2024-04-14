@@ -1,10 +1,28 @@
-'use client';
+"use client";
+import dynamic from "next/dynamic";
+
 import React, { useEffect, useState } from "react";
 import Navheader from "../_components/Navheader";
-import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+// import {   useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { Icon } from "leaflet";
-import { Popup } from "react-leaflet";
+const MapContainerWithNoSSR = dynamic(
+  () => import("react-leaflet").then((mod) => mod.MapContainer),
+  { ssr: false }
+);
+
+const MarkerWithNoSSR = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+const TileLayerWithNoSSR = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+const PopupWithNoSSR = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Popup),
+  { ssr: false }
+);
+
 import redIcon from "../../public/location.png";
 import greenIcon from "../../public/gps.png";
 import OrangeIcon from "../../public/placeholder.png";
@@ -115,45 +133,45 @@ const page = () => {
     `User info: Role is ${role}, Token is ${token}, Email is ${email}, DisplayName is ${displayName}`
   );
 
-  const LocationFinderDummy = () => {
-    const map = useMapEvents({
-      click(e) {
-        console.log(e.latlng);
-      },
-    });
-    return null;
-  };
-  useEffect(() => {
-    console.log("persons", persons);
-  }, [persons]);
+  // const LocationFinderDummy = () => {
+  //   const map = useMapEvents({
+  //     click(e) {
+  //       console.log(e.latlng);
+  //     },
+  //   });
+  //   return null;
+  // };
+  // useEffect(() => {
+  //   console.log("persons", persons);
+  // }, [persons]);
 
   return (
     <div className="w-full bg-[#ceb99c] h-[100vh] p-0 m-0 ">
       <Navheader />
       <h1 className="text-4xl font-bold text-center mt-4">جميع الحالات</h1>
       <div className="w-[90%] h-[70vh] mx-auto  border-2 border-blue-500">
-        <MapContainer
+        <MapContainerWithNoSSR
           center={position}
           zoom={15}
           style={{ height: "520px", zIndex: 0 }}
         >
-          <TileLayer
+          <TileLayerWithNoSSR
             attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           />{" "}
-          <TileLayer
+          <TileLayerWithNoSSR
             attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           />
           {persons &&
             persons.map((person, index) => (
-              <Marker
+              <MarkerWithNoSSR
                 key={index}
                 position={[person.latitude, person.longitude]}
                 // icon={getMarkerIcon(person.color)}
                 // img={getMarkerIcon(person.coor)}
               >
-                <Popup>
+                <PopupWithNoSSR>
                   <table className="table-auto border-[1.5px] border-black text-right w-[200px] h-[150px]">
                     <tbody className="border-[1.5px] border-black">
                       <tr className="border-[1.5px] border-black">
@@ -202,16 +220,16 @@ const page = () => {
                       مسح هذه الحالة
                     </button>
                   </div>
-                </Popup>
-              </Marker>
+                </PopupWithNoSSR>
+              </MarkerWithNoSSR>
             ))}
           {markers.map((marker, index) => (
-            <Marker
+            <MarkerWithNoSSR
               key={index}
               position={marker.position}
               // icon={getMarkerIcon(marker.data)}
             >
-              <Popup>
+              <PopupWithNoSSR>
                 <table className="table-auto border-[1.5px] border-black text-right w-[200px] h-[150px]">
                   <tbody className="border-[1.5px] border-black">
                     <tr className="border-[1.5px] border-black">
@@ -259,11 +277,11 @@ const page = () => {
                     مسح هذه الحالة
                   </button>
                 </div>
-              </Popup>
-            </Marker>
+              </PopupWithNoSSR>
+            </MarkerWithNoSSR>
           ))}
           {/* <LocationFinderDummy /> */}
-        </MapContainer>
+        </MapContainerWithNoSSR>
       </div>
     </div>
   );

@@ -93,7 +93,7 @@ const page = () => {
         </div>
         <div className="flex flex-col max-md:w-[90%] w-[80%] lg:w-[35%] py-10 max-md:mt-[20px] bg-white mx-auto rounded-lg text-center p-3 ">
           <form style={{ direction: "rtl" }} onSubmit={handleSubmit}>
-            <h1 className="mt-[10px] max-md:mb-[10px] lg:mt-[10px] text-[24px] font-[600] mb-3">
+            <h1 className="mt-[10px] max-md:mb-[10px] lg:mt-[10px] text-[24px] font-[600] ">
               تسجيل الدخول
             </h1>
 
